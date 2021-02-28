@@ -38,14 +38,12 @@ namespace Lab3
 
             if (_table[index].Head == _table[index].Last)
                 return _table[index].Head.Data.Value;
-            
-            var node = _table[index].Head;
-            do
+
+            foreach (KeyValue node in _table[index])
             {
-                if (node.Data.Hash.Equals(hash))
-                    return node.Data.Value;
-                node = node.Next;
-            } while (node != null);
+                if (node.Hash.Equals(hash))
+                    return node.Value;
+            }
 
             return null;
         }
@@ -72,14 +70,10 @@ namespace Lab3
             {
                 if (chain?.Head != null)
                 {
-                    
-                    var node = chain.Head;
-                    do
+                    foreach (KeyValue node in chain)
                     {
-                        Add(newTable,node.Data.Hash,node.Data.Value);
-                        
-                        node = node.Next;
-                    } while (node != null);
+                        Add(newTable,node.Hash,node.Value);
+                    }
                 }
             }
 
