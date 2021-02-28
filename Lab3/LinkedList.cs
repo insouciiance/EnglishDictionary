@@ -8,19 +8,28 @@ namespace Lab3
 {
     public class LinkedList<T>
     {
-        public LinkedListNode<T> Head { get; }
-        private LinkedListNode<T> _last;
+        public LinkedListNode<T> Head { get; private set; }
+        public LinkedListNode<T> Last { get; private set; }
 
         public LinkedList(T initialData)
         {
             Head = new LinkedListNode<T>(initialData, null);
-            _last = Head;
+            Last = Head;
         }
+
+        public LinkedList() { }
 
         public void Add(T item)
         {
-            _last.Next = new LinkedListNode<T>(item, null);
-            _last = _last.Next;
+            if (Last == null)
+            {
+                Head = new LinkedListNode<T>(item, null);
+                Last = Head;
+                return;
+            }
+            
+            Last.Next = new LinkedListNode<T>(item, null);
+            Last = Last.Next;
         }
     }
 }
