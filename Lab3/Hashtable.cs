@@ -10,26 +10,24 @@ namespace Lab3
     {
 
         private LinkedList<KeyValue>[] _table;
+        private int _count;
 
         public Hashtable(int size=5)
         {
             _table = new LinkedList<KeyValue>[size];
         }
 
+        public int Count => _table.Length;
+
         public void Add(object key,object val)
         {
-            string hash = key.ToString();
-            int index = HashToIndex(hash,_table.Length);
-            if (_table[index] != null)
-            {
-                _table[index].Add(new KeyValue(hash,val));
-            }
-            else
-            {
-                _table[index] = new LinkedList<KeyValue>(new KeyValue(hash,val));
-            }
+            if((double) _count / _table.Length > .8)
+                _table = Resize();
+            
+            Add(_table,key,val);
+            _count++;
         }
-
+        
         public object Get(object key)
         {
             string hash = key.ToString();
@@ -51,7 +49,42 @@ namespace Lab3
 
             return null;
         }
+
+        private void Add(LinkedList<KeyValue>[] table,object key,object val)
+        {
+            string hash = key.ToString();
+            int index = HashToIndex(hash,table.Length);
+            if (table[index] != null)
+            {
+                table[index].Add(new KeyValue(hash,val));
+            }
+            else
+            {
+                table[index] = new LinkedList<KeyValue>(new KeyValue(hash,val));
+            }
+        }
         
+        private LinkedList<KeyValue>[] Resize()
+        {
+            var newTable = new LinkedList<KeyValue>[_table.Length * 2];
+
+            foreach (var chain in _table)
+            {
+                if (chain?.Head != null)
+                {
+                    
+                    var node = chain.Head;
+                    do
+                    {
+                        Add(newTable,node.Data.Hash,node.Data.Value);
+                        
+                        node = node.Next;
+                    } while (node != null);
+                }
+            }
+
+            return newTable;
+        }
 
         private int HashToIndex(string hash,int arraySize)
         {
