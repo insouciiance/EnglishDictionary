@@ -21,7 +21,8 @@ namespace Lab3
             _path = path;
         }
 
-        public async Task<Hashtable<TKey, TValue>> ParseAsync<TKey, TValue>(Func<string, TKey> keySelector, Func<string, TValue> valueSelector) where TKey : IEquatable<TKey>
+        public async Task<Hashtable<TKey, TValue>> ParseAsync<TKey, TValue>(Func<string, TKey> keySelector, Func<string, TValue> valueSelector) 
+            where TKey : IEquatable<TKey>
         {
             Hashtable<TKey, TValue> table = new Hashtable<TKey, TValue>();
 

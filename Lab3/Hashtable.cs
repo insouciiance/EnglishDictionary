@@ -17,8 +17,6 @@ namespace Lab3
             _table = new LinkedList<KeyValuePair<TKey, TValue>>[size];
         }
 
-        public int Count => _table.Length;
-
         public void Add(TKey key, TValue val)
         {
             if ((double)_count / _table.Length > .8)

@@ -13,9 +13,14 @@ namespace Lab3
             DictionaryParser parser = new DictionaryParser("../../../dictionary.txt");
 
             Console.WriteLine("Parsing the dictionary...");
-            Task<Hashtable<string, string>> parserTask = parser.ParseAsync((line) => line.Split(';')[0], line => line);
+            var parserTask = parser
+                .ParseAsync((line) => line.Split(';')[0], line => line)
+                .ContinueWith(tableTask =>
+                {
+                    Console.WriteLine("Parsing done.");
+                    return tableTask;
+                });
 
-            Console.Write("Enter your word to get the definition: ");
             string word = Console.ReadLine();
 
             if (!parserTask.IsCompleted)
@@ -23,10 +28,9 @@ namespace Lab3
                 Console.WriteLine("Waiting for the parser...");
             }
 
-            Hashtable<string, string> dictionary = await parserTask;
-            Console.WriteLine("Parsing done.");
+            Hashtable<string, string> dictionary = await await parserTask;
 
-            Console.WriteLine(dictionary.Get(word));
+            Console.WriteLine(dictionary.Get(word?.ToUpperInvariant()));
 
             Console.ReadKey();
         }
