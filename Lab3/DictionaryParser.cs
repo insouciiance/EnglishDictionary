@@ -13,6 +13,11 @@ namespace Lab3
 
         public DictionaryParser(string path)
         {
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"File not found at {path}");
+            }
+
             _path = path;
         }
 
