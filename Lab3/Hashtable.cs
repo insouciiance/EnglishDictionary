@@ -30,7 +30,7 @@ namespace Lab3
         
         public object Get(object key)
         {
-            string hash = key.ToString();
+            string hash = key.ToString().ToLowerInvariant();
             int index = HashToIndex(hash,_table.Length);
             
             if (index >= _table.Length || _table[index] == null)
@@ -50,7 +50,7 @@ namespace Lab3
 
         private void Add(LinkedList<KeyValue>[] table,object key,object val)
         {
-            string hash = key.ToString().ToLower();
+            string hash = key.ToString().ToLowerInvariant();
             int index = HashToIndex(hash,table.Length);
             if (table[index] != null)
             {
