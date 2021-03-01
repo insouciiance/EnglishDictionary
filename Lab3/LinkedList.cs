@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lab3
 {
-    public class LinkedList<T> : IEnumerable
+    public class LinkedList<T> : IEnumerable<T>
     {
         public LinkedListNode<T> Head { get; private set; }
         public LinkedListNode<T> Last { get; private set; }
@@ -32,37 +32,33 @@ namespace Lab3
             Last.Next = new LinkedListNode<T>(item, null);
             Last = Last.Next;
         }
-        
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return new LinkedListEnumerator<T>(this);
-        }
-        
-        private class LinkedListEnumerator<T> : IEnumerator<T>
-        {
 
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => new LinkedListEnumerator(this);
 
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<T>)this).GetEnumerator();
+
+        private class LinkedListEnumerator : IEnumerator<T>
+        {
             public T Current => CurentNode.Data;
             
             private LinkedListNode<T> Head;
             private LinkedListNode<T> CurentNode;
             object IEnumerator.Current => Current;
 
-            private bool firstNode;
+            private bool _firstNodeVisited = false;
 
             public LinkedListEnumerator(LinkedList<T> head)
             {
                 Head = head.Head;
                 CurentNode = Head;
-                firstNode = true;
             }
 
             public void Dispose() { }
             public bool MoveNext()
             {
-                if (firstNode)
+                if (!_firstNodeVisited)
                 {
-                    firstNode = false;
+                    _firstNodeVisited = true;
                     return true;
                 }
                 
@@ -76,10 +72,9 @@ namespace Lab3
             }
             public void Reset()
             {
-                firstNode = true;
+                _firstNodeVisited = false;
                 CurentNode = Head;
             }
-            
         }
     }
 }

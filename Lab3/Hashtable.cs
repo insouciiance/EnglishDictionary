@@ -84,6 +84,7 @@ namespace Lab3
         {
             long sum = 0;
             long mul = 1;
+            hash = hash.ToLowerInvariant();
             for (int i = 0; i < hash.Length; i++) {
                 mul = (i % 4 == 0) ? 1 : mul * 256;
                 sum += hash[i] * mul;
