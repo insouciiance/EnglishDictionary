@@ -16,21 +16,21 @@ namespace Lab3
             var parserTask = parser
                 .ParseAsync((line) => line.Split(';')[0], line => line)
                 .ContinueWith(tableTask =>
-                {
-                    Console.WriteLine("Parsing done.");
-                    return tableTask;
-                });
+                    {
+                        Console.WriteLine("Parsing done.");
+                        return tableTask.Result;
+                    }, TaskContinuationOptions.ExecuteSynchronously);
 
-            string word = Console.ReadLine();
+            string word = Console.ReadLine()?.ToUpperInvariant();
 
             if (!parserTask.IsCompleted)
             {
                 Console.WriteLine("Waiting for the parser...");
             }
 
-            Hashtable<string, string> dictionary = await await parserTask;
+            Hashtable<string, string> dictionary = await parserTask;
 
-            Console.WriteLine(dictionary.Get(word?.ToUpperInvariant()));
+            Console.WriteLine(dictionary[word?.ToUpperInvariant()]);
 
             Console.ReadKey();
         }

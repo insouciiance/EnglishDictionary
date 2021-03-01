@@ -8,6 +8,7 @@ namespace Lab3
 {
     public class Hashtable<TKey, TValue> where TKey : IEquatable<TKey>
     {
+        private const double MaxLoadFactor = .8;
 
         private LinkedList<KeyValuePair<TKey, TValue>>[] _table;
         private int _count;
@@ -19,67 +20,77 @@ namespace Lab3
 
         public void Add(TKey key, TValue val)
         {
-            if ((double)_count / _table.Length > .8)
-                _table = Resize();
-
-            Add(_table, key, val);
-            _count++;
-        }
-
-        public object Get(object key)
-        {
-            string hash = key.ToString().ToLowerInvariant();
-            int index = HashToIndex(hash, _table.Length);
-
-            if (index >= _table.Length || _table[index] == null)
-                return null;
-
-            if (_table[index].Head == _table[index].Last)
-                return _table[index].Head.Data.Value;
-
-            foreach (KeyValuePair<TKey, TValue> node in _table[index])
+            if ((double) _count / _table.Length > MaxLoadFactor)
             {
-                if (node.Key.Equals(key))
-                    return node.Value;
+                Resize();
             }
 
-            return null;
-        }
-
-        private void Add(LinkedList<KeyValuePair<TKey, TValue>>[] table, TKey key, TValue val)
-        {
-            string hash = key.ToString().ToLowerInvariant();
-            int index = HashToIndex(hash, table.Length);
-            if (table[index] != null)
+            int index = HashToIndex(key, _table.Length);
+            if (_table[index] != null)
             {
-                table[index].Add(new KeyValuePair<TKey, TValue>(key, val));
+                _table[index].Add(new KeyValuePair<TKey, TValue>(key, val));
             }
             else
             {
-                table[index] = new LinkedList<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(key, val));
+                _table[index] = new LinkedList<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(key, val));
+            }
+
+            _count++;
+        }
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                int index = HashToIndex(key, _table.Length);
+
+                if (key == null)
+                {
+                    throw new ArgumentNullException();
+                }
+
+                if (index >= _table.Length || _table[index] == null)
+                {
+                    throw new KeyNotFoundException();
+                }
+
+                if (_table[index].Head == _table[index].Last && key.Equals(_table[index].Head.Data.Key))
+                {
+                    return _table[index].Head.Data.Value;
+                }
+
+                foreach (KeyValuePair<TKey, TValue> node in _table[index])
+                {
+                    if (node.Key.Equals(key))
+                    {
+                        return node.Value;
+                    }
+                }
+
+                throw new KeyNotFoundException();
             }
         }
 
-        private LinkedList<KeyValuePair<TKey, TValue>>[] Resize()
+        private void Resize(int multiplier = 2)
         {
-            var newTable = new LinkedList<KeyValuePair<TKey, TValue>>[_table.Length * 2];
+            var oldTable = _table;
+            _table = new LinkedList<KeyValuePair<TKey, TValue>>[_table.Length * multiplier];
 
-            foreach (var chain in _table)
+            foreach (var chain in oldTable)
             {
                 if (chain?.Head != null)
                 {
                     foreach (KeyValuePair<TKey, TValue> node in chain)
                     {
-                        Add(newTable, node.Key, node.Value);
+                        Add(node.Key, node.Value);
                     }
                 }
             }
-
-            return newTable;
         }
 
-        private int HashToIndex(string hash, int arraySize)
+        private int HashToIndex(object o, int arraySize)
         {
+            string hash = o.ToString().ToLowerInvariant();
             long sum = 0;
             long mul = 1;
             for (int i = 0; i < hash.Length; i++)
