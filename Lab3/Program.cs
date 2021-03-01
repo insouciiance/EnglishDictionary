@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +13,7 @@ namespace Lab3
             DictionaryParser parser = new DictionaryParser("../../../dictionary.txt");
 
             Console.WriteLine("Parsing the dictionary...");
-            Task<Hashtable> parserTask = parser.ParseAsync((line) => line.Split(';')[0]);
+            Task<Hashtable<string, string>> parserTask = parser.ParseAsync((line) => line.Split(';')[0], line => line);
 
             Console.Write("Enter your word to get the definition: ");
             string word = Console.ReadLine();
@@ -25,7 +23,7 @@ namespace Lab3
                 Console.WriteLine("Waiting for the parser...");
             }
 
-            Hashtable dictionary = await parserTask;
+            Hashtable<string, string> dictionary = await parserTask;
             Console.WriteLine("Parsing done.");
 
             Console.WriteLine(dictionary.Get(word));
