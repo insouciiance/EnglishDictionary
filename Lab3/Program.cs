@@ -14,7 +14,7 @@ namespace Lab3
 
             Console.WriteLine("Parsing the dictionary...");
             var parserTask = parser
-                .ParseAsync((line) => line.Split(';')[0], line => line)
+                .ParseAsync(line => line.Split(';')[0], line => line)
                 .ContinueWith(tableTask =>
                     {
                         Console.WriteLine("Parsing done.");
