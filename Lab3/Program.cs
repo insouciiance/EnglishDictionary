@@ -32,8 +32,14 @@ namespace Lab3
 
             do
             {
-                Console.WriteLine(dictionary[word?.ToUpperInvariant()]);
-                Console.Write("\nEnter a word: ");
+                try
+                {
+                    Console.WriteLine(dictionary[word?.ToUpperInvariant()]);
+                }
+                catch (KeyNotFoundException)
+                {
+                    Console.WriteLine("Word not found!");
+                }
             } while ((word = Console.ReadLine()) != string.Empty);
         }
     }
