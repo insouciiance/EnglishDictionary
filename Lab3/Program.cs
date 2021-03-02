@@ -21,7 +21,7 @@ namespace Lab3
                         return tableTask.Result;
                     }, TaskContinuationOptions.ExecuteSynchronously);
 
-            string word = Console.ReadLine()?.ToUpperInvariant();
+            string word = Console.ReadLine();
 
             if (!parserTask.IsCompleted)
             {
@@ -30,9 +30,11 @@ namespace Lab3
 
             Hashtable<string, string> dictionary = await parserTask;
 
-            Console.WriteLine(dictionary[word?.ToUpperInvariant()]);
-
-            Console.ReadKey();
+            do
+            {
+                Console.WriteLine(dictionary[word?.ToUpperInvariant()]);
+                Console.Write("\nEnter a word: ");
+            } while ((word = Console.ReadLine()) != string.Empty);
         }
     }
 }
