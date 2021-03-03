@@ -13,9 +13,12 @@ namespace Lab3
         private LinkedList<KeyValuePair<TKey, TValue>>[] _table;
         private int _count;
 
-        public Hashtable(int size = 5)
+        private Func<TKey, int> _hashFunction;
+
+        public Hashtable(Func<TKey, int> hashFunction, int size = 5)
         {
             _table = new LinkedList<KeyValuePair<TKey, TValue>>[size];
+            _hashFunction = hashFunction;
         }
 
         public void Add(TKey key, TValue val)
@@ -88,17 +91,9 @@ namespace Lab3
             }
         }
 
-        private int HashToIndex(object o, int arraySize)
+        private int HashToIndex(TKey o, int arraySize)
         {
-            string hash = o.ToString().ToLowerInvariant();
-            long sum = 0;
-            long mul = 1;
-            for (int i = 0; i < hash.Length; i++)
-            {
-                mul = (i % 4 == 0) ? 1 : mul * 256;
-                sum += hash[i] * mul;
-            }
-            return (int)(Math.Abs(sum) % arraySize);
+            return Math.Abs(_hashFunction(o)) % arraySize;
         }
     }
 }
