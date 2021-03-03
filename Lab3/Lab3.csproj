@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="DictionaryParser.cs" />
     <Compile Include="Hashtable.cs" />
+    <Compile Include="HashtableFunctions.cs" />
     <Compile Include="KeyValuePair.cs" />
     <Compile Include="LinkedList.cs" />
     <Compile Include="LinkedListNode.cs" />

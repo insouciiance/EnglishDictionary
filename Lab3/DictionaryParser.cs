@@ -24,20 +24,7 @@ namespace Lab3
         public async Task<Hashtable<TKey, TValue>> ParseAsync<TKey, TValue>(Func<string, TKey> keySelector, Func<string, TValue> valueSelector)
             where TKey : IEquatable<TKey>
         {
-            Hashtable<TKey, TValue> table = new Hashtable<TKey, TValue>(o =>
-            {
-                string hash = o.ToString().ToLowerInvariant();
-
-                long sum = 0;
-                long mul = 1;
-                for (int i = 0; i < hash.Length; i++)
-                {
-                    mul = (i % 4 == 0) ? 1 : mul * 256;
-                    sum += hash[i] * mul;
-                }
-
-                return (int)sum;
-            });
+            Hashtable<TKey, TValue> table = new Hashtable<TKey, TValue>(HashtableFunctions.SumFunction);
 
             using (StreamReader reader = new StreamReader(_path))
             {
