@@ -8,6 +8,8 @@ namespace Lab3
 {
     public static class HashtableFunctions
     {
+        private static Random _random = new Random();
+
         public static int SumFunction<T>(T o)
         {
             string hash = o.ToString().ToLowerInvariant();
@@ -21,7 +23,8 @@ namespace Lab3
             }
 
             return (int)sum;
-
         }
+
+        public static int DefaultHashCodeFunction<T>(T o) => o.GetHashCode();
     }
 }
