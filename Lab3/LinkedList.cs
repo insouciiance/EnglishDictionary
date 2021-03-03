@@ -12,6 +12,22 @@ namespace Lab3
         public LinkedListNode<T> Head { get; private set; }
         public LinkedListNode<T> Last { get; private set; }
 
+        public int Count
+        {
+            get
+            {
+                int count = 0;
+
+                foreach (T _ in this)
+                {
+                    count++; 
+                }
+
+                ((IEnumerable<LinkedList<T>>)this).GetEnumerator().Reset();
+                return count;
+            }
+        }
+
         public LinkedList(T initialData)
         {
             Head = new LinkedListNode<T>(initialData, null);
