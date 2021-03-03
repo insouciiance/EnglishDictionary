@@ -23,7 +23,7 @@ namespace Lab3
                     count++; 
                 }
 
-                ((IEnumerable<LinkedList<T>>)this).GetEnumerator().Reset();
+                ((IEnumerable<T>)this).GetEnumerator().Reset();
                 return count;
             }
         }
