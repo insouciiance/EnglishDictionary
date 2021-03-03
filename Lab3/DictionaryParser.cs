@@ -13,19 +13,25 @@ namespace Lab3
 
         public DictionaryParser(string path)
         {
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"File not found at {path}");
+            }
+
             _path = path;
         }
 
-        public async Task<Hashtable> ParseAsync(Func<string, string> keySelector)
+        public async Task<Hashtable<TKey, TValue>> ParseAsync<TKey, TValue>(Func<string, TKey> keySelector, Func<string, TValue> valueSelector) 
+            where TKey : IEquatable<TKey>
         {
-            Hashtable table = new Hashtable();
+            Hashtable<TKey, TValue> table = new Hashtable<TKey, TValue>();
 
             using (StreamReader reader = new StreamReader(_path))
             {
                 string line;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    table.Add(keySelector(line), line);
+                    table.Add(keySelector(line), valueSelector(line));
                 }
             }
 

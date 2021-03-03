@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +11,36 @@ namespace Lab3
         static async Task Main(string[] args)
         {
             DictionaryParser parser = new DictionaryParser("../../../dictionary.txt");
-            Hashtable dictionary = await parser.ParseAsync((line) => line.Split(';')[0]);
 
-            Console.WriteLine(dictionary.Get("abaCUs"));
+            Console.WriteLine("Parsing the dictionary...");
+            var parserTask = parser
+                .ParseAsync(line => line.Split(';')[0], line => line)
+                .ContinueWith(tableTask =>
+                    {
+                        Console.WriteLine("Parsing done.");
+                        return tableTask.Result;
+                    }, TaskContinuationOptions.ExecuteSynchronously);
 
-            Console.ReadKey();
+            string word = Console.ReadLine();
+
+            if (!parserTask.IsCompleted)
+            {
+                Console.WriteLine("Waiting for the parser...");
+            }
+
+            Hashtable<string, string> dictionary = await parserTask;
+
+            do
+            {
+                try
+                {
+                    Console.WriteLine(dictionary[word?.ToUpperInvariant()]);
+                }
+                catch (KeyNotFoundException)
+                {
+                    Console.WriteLine("Word not found!");
+                }
+            } while ((word = Console.ReadLine()) != string.Empty);
         }
     }
 }

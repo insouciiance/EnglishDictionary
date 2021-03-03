@@ -39,18 +39,18 @@ namespace Lab3
 
         private class LinkedListEnumerator : IEnumerator<T>
         {
-            public T Current => CurentNode.Data;
+            public T Current => _currentNode.Data;
             
-            private LinkedListNode<T> Head;
-            private LinkedListNode<T> CurentNode;
+            private readonly LinkedListNode<T> _head;
+            private LinkedListNode<T> _currentNode;
             object IEnumerator.Current => Current;
 
             private bool _firstNodeVisited = false;
 
             public LinkedListEnumerator(LinkedList<T> head)
             {
-                Head = head.Head;
-                CurentNode = Head;
+                _head = head.Head;
+                _currentNode = _head;
             }
 
             public void Dispose() { }
@@ -62,9 +62,9 @@ namespace Lab3
                     return true;
                 }
                 
-                if (CurentNode.Next != null)
+                if (_currentNode.Next != null)
                 {
-                    CurentNode = CurentNode.Next;
+                    _currentNode = _currentNode.Next;
                     return true;
                 }
 
@@ -73,7 +73,7 @@ namespace Lab3
             public void Reset()
             {
                 _firstNodeVisited = false;
-                CurentNode = Head;
+                _currentNode = _head;
             }
         }
     }
