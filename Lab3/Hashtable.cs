@@ -107,7 +107,8 @@ namespace Lab3
         {
             var oldTable = _table;
             _table = new LinkedList<KeyValuePair<TKey, TValue>>[_table.Length * multiplier];
-
+            _count = 0;
+            
             foreach (var chain in oldTable)
             {
                 if (chain?.Head != null)
