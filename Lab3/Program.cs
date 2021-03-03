@@ -18,6 +18,7 @@ namespace Lab3
                 .ContinueWith(tableTask =>
                     {
                         Console.WriteLine("Parsing done.");
+                        Console.WriteLine(tableTask.Result.HashTablesInfo());
                         return tableTask.Result;
                     }, TaskContinuationOptions.ExecuteSynchronously);
 

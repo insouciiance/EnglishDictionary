@@ -15,6 +15,8 @@ namespace Lab3
 
         private Func<TKey, int> _hashFunction;
 
+        private double LoadFactor => (double) _count / _table.Length;
+
         public Hashtable(Func<TKey, int> hashFunction, int size = 5)
         {
             _table = new LinkedList<KeyValuePair<TKey, TValue>>[size];
@@ -23,7 +25,7 @@ namespace Lab3
 
         public void Add(TKey key, TValue val)
         {
-            if ((double) _count / _table.Length > MaxLoadFactor)
+            if (LoadFactor > MaxLoadFactor)
             {
                 Resize();
             }
@@ -72,6 +74,33 @@ namespace Lab3
 
                 throw new KeyNotFoundException();
             }
+        }
+
+        public string HashTablesInfo()
+        {
+            string result = "";
+            result += $"Elements count: {_count}\n";
+            result += $"Table lenght: {_table.Length}\n";
+            result += $"Loadfactor: {LoadFactor}\n";
+
+            double averageBlockLoad = 0;
+            int maxBlockLoad = 0;
+            
+            foreach (var block in _table)
+            {
+                if(block == null)
+                    continue;
+
+                averageBlockLoad += block.Count;
+                if (block.Count > maxBlockLoad)
+                    maxBlockLoad = block.Count;
+            }
+
+            averageBlockLoad /= _table.Length;
+
+            result += $"Average Block Load: {averageBlockLoad}\n";
+            result += $"Max Block Load: {maxBlockLoad}\n";
+            return result;
         }
 
         private void Resize(int multiplier = 2)
